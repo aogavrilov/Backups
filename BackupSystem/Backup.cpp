@@ -1,6 +1,8 @@
 #include <time.h>
 #include <vector>
+#include <fstream>
 #include <algorithm>
+#include <iostream>
 //
 // Created by Alexey on 19.10.2020.
 //
@@ -36,4 +38,33 @@ vector<string> Backup::RemoveObject(string address) {
     }
 
     return objects_address;
+}
+RestorePoint& Backup::CreatePoint(TypesOfPoints type, PointSavingType typesave){
+    RestorePoint NewPoint = RestorePoint(objects_address, type, LastVersion);
+    points.push_back(NewPoint);
+    BackupSize++;
+    if(typesave == ToLibrary) {
+        NewPoint.SavePointToLibrary(to_string(LastVersion));
+    }
+    else {
+        NewPoint.SavePointToBackup(AddressOfBackupPoints, to_string(LastVersion));
+
+    }
+    LastVersion++;
+    return NewPoint;
+}
+
+
+
+Backup::Backup(vector<string> objects, size_t ID) : objects_address(objects), Id(ID){
+    LastVersion = 0;
+    mkdir(("Backup" + to_string(this->Id)).c_str());
+    ifstream InputFile("config.cfg");
+
+    ofstream BackupFile;
+    AddressOfBackupPoints = ("Backup" + to_string(this->Id) + "\\brp").c_str();
+    BackupFile.open(("Backup" + to_string(this->Id) + "\\BackUp.info").c_str());
+    BackupFile << "ID=" << Id << endl;
+    BackupFile << "CreationTime=" << "In Progress" << endl;
+
 }

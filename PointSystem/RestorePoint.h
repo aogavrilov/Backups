@@ -17,7 +17,10 @@ class RestorePoint {
     vector<string> objects_list;
     TypesOfPoints type;
     size_t version;
-    RestorePoint();
+public:
+    RestorePoint(vector<string> objects, TypesOfPoints type, size_t version) : objects_list(objects), type(type),
+    version(version){
+    };
     void SavePointToLibrary(string name);
     void SavePointToBackup(string path, string name);
 };

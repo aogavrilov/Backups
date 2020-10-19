@@ -4,17 +4,17 @@
 
 #include "RestorePoint.h"
 #include <fstream>
+#include <iostream>
+#include <dir.h>
 using namespace std;
-/*
- *
- *  void SavePointToLibrary();
-    void SavePointToBackup();
-    vector<string> objects_list;
-    TypesOfPoints type;
- */
+
 void RestorePoint::SavePointToBackup(string path, string name) {
     ofstream file;
-    file.open(path+name);
+    file.open(path+name+to_string(version));
+    /*    vector<string> objects_list;
+    TypesOfPoints type;
+    size_t version;*/
+    file << "Type=" << type << endl;
     for(auto iter = objects_list.begin(); iter != objects_list.end(); iter++){
         file << *iter << endl;
     }
@@ -24,10 +24,15 @@ void RestorePoint::SavePointToLibrary(string name) {
     ifstream InputFile("config.cfg");
     string LibraryPath;
     InputFile >> LibraryPath;
-    LibraryPath = LibraryPath.substr(17);
+
+    if(LibraryPath.size() < 17)
+        throw("Some exception for invalid config");// В класс запилить!
+    LibraryPath = LibraryPath.substr(18);
+    mkdir(LibraryPath.c_str());
 
     ofstream file;
-    file.open(LibraryPath+name);
+    file.open(LibraryPath + "\\" + name + to_string(version));
+    file << "Type=" << type << endl;
     for(auto iter = objects_list.begin(); iter != objects_list.end(); iter++){
         file << *iter << endl;
     }
