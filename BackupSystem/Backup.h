@@ -11,10 +11,11 @@
 #include <string>
 using namespace std;
 class Backup{
-
+//To config: Global link for saving restore points!!!
     size_t Id;
     time_t CreationTime;
     size_t BackupSize;
+    string AddressOfBackupPoints;
     vector<RestorePoint> points;
     vector<string> objects_address;
 public:
