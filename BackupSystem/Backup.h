@@ -16,7 +16,11 @@ class Backup{
     time_t CreationTime;
     size_t BackupSize;
     vector<RestorePoint> points;
-    vector<string> objects_addres;
+    vector<string> objects_address;
+public:
+    vector<string> GetObjects(); // Хотел сделать указатель на вектор, но чтобы он мог быть использован только для чтения. Вопрос - как?
+    vector<string> AddObject(string address);
+    vector<string>  RemoveObject(string address);
 
 };
 
