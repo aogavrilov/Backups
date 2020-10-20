@@ -48,6 +48,6 @@ PointSavingType RestorePoint::GetSavingType() {
 void RestorePoint::SetVersion(int version) {
     version = version;
 }
-tm RestorePoint::GetDate(){
+tm  RestorePoint::GetDate(){
     return ltm;
 }

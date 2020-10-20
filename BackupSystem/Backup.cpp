@@ -34,15 +34,16 @@ RestorePoint& Backup::CreatePoint(TypesOfPoints type, PointSavingType typesave, 
     RestorePoint NewPoint = RestorePoint(objects_address, type, LastVersion, typesave);
     points.push_back(NewPoint);
     BackupSize+=PointSize;
+    UpdateBackupInfo();
     if(typesave == ToLibrary) {
         NewPoint.SavePointToLibrary(to_string(Id));
     }
     else {
         NewPoint.SavePointToBackup(AddressOfBackupPoints, to_string(Id));
     }
-    UpdateBackupInfo();
 
-    return NewPoint;
+
+    return points[points.size()-1];
 }
 void Backup::UpdateBackupInfo() {
     ifstream InputFile("config.cfg");
@@ -73,7 +74,16 @@ Backup::Backup(vector<string> objects, size_t ID) : objects_address(objects), Id
     BackupFile << "CreationTime=" << ltm->tm_mday << "." << 1 + ltm->tm_mon << "." << 1900 + ltm->tm_year << endl;
     BackupFile << "BackupSize=" << BackupSize << endl;
 }
-
+bool IsFirstDateNewiest(tm Date1, tm Date2){
+    if(Date1.tm_year > Date2.tm_year)
+        return 0;
+    if((Date1.tm_year == Date2.tm_year) && (Date1.tm_mon > Date2.tm_mon))
+        return 0;
+    if((Date1.tm_year == Date2.tm_year) && (Date1.tm_mon == Date2.tm_mon) &&
+       (Date1.tm_mday > Date2.tm_mday))
+        return 0;
+    return 1;
+}
 size_t Backup::PointsTrimmingByCount(size_t count){
     if(points.size() <= count)
         return 0;
@@ -101,6 +111,7 @@ size_t Backup::PointsTrimmingByCount(size_t count){
             LibraryPath = LibraryPath.substr(18);
             remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(points[i - removed].GetVersion())).c_str());
         }
+
         points.erase(points.begin() + i - removed);
         removed++;
     }
@@ -109,12 +120,7 @@ size_t Backup::PointsTrimmingByCount(size_t count){
 
 void Backup::PointsTrimmingByDate(tm *Date) {
     for(auto iter = points.begin(); iter < points.end(); iter++){
-        if(Date->tm_year > iter->GetDate().tm_year)
-            continue;
-        if((Date->tm_year == iter->GetDate().tm_year) && (Date->tm_mon > iter->GetDate().tm_mon))
-            continue;
-        if((Date->tm_year == iter->GetDate().tm_year) && (Date->tm_mon == iter->GetDate().tm_mon) &&
-            (Date->tm_mday > iter->GetDate().tm_mday))
+        if(IsFirstDateNewiest(*Date, iter->GetDate()))
             continue;
         if(iter->GetSavingType() == ToDirectory)
             remove((AddressOfBackupPoints + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
@@ -137,12 +143,64 @@ void Backup::PointsTrimmingByDate(tm *Date) {
 
     return;
 }
-
+size_t Backup::GetSize(){
+    return BackupSize;
+}
 int Backup::GetID(){
     return Id;
 }
+
+void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeOfSelection, size_t count, tm* Date) {
+    if(TypesOfTrimming.size() != 2)
+        throw "Expected 2 params, found not 2";
+
+    if((TypeOfSelection == JustAll) && (TypesOfTrimming[0] == 1)){
+
+        if(points.size() <= count)
+            return;
+        size_t delta = points.size() - count;
+        size_t delta_0 = delta;
+        size_t removed = 0;
+        if(points[delta].GetType() == IncrementPoint){
+            for(int i = delta; i > 0; i--){
+                if(points[i].GetType() == FullPoint) {
+                    delta = i;
+                    break;
+                }
+            }
+        }
+        for(size_t i = 0; i < delta; i++){
+            if ((IsFirstDateNewiest(*Date, points[i - removed].GetDate())) && (TypesOfTrimming[1] == 1))
+                continue;
+            if(points[i - removed].GetSavingType() == ToDirectory) {
+                remove((AddressOfBackupPoints + to_string(Id) + "." +
+                        to_string(points[i - removed].GetVersion())).c_str());
+            }
+            else {
+                ifstream InputFile("config.cfg");
+                string LibraryPath;
+                InputFile >> LibraryPath;
+
+                if(LibraryPath.size() < 17)
+                    throw("Undefined exception!");// В класс запилить!
+                LibraryPath = LibraryPath.substr(18);
+                remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(points[i - removed].GetVersion())).c_str());
+            }
+            points.erase(points.begin() + i - removed);
+            removed++;
+        }
+        return;
+
+    }
+    else if(TypeOfSelection == JustAll){
+        PointsTrimmingByDate(Date);
+    }
+    else{
+        PointsTrimmingByCount(count);
+        PointsTrimmingByDate(Date);
+    }
+}
 /*
-    void PointsTrimmingByShape(size_t shape);
     void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);
 
  */

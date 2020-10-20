@@ -24,9 +24,13 @@ int main() {
     second.CreatePoint(FullPoint, ToLibrary, 654);
     second.CreatePoint(FullPoint, ToDirectory, 654);
     second.CreatePoint(FullPoint, ToLibrary,7654);
-
+    time_t  now = time(0);
+    tm* lt = localtime(&now);
+   // lt->tm_mday +=1;
+ //   first.PointsTrimmingByDate(lt);
+    first.PointsTrimmingMixed({0, 1}, JustAll, 2, lt);
     Backups console = Backups({first, second});
-    console.DeleteBackup(0);
+    //console.TrimmingByShape(50000);
 
     return 0;
 }

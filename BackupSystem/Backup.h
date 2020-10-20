@@ -32,7 +32,8 @@ public:
     size_t PointsTrimmingByCount(size_t count);
     void PointsTrimmingByDate(tm* Date);
     void PointsTrimmingByShape(size_t shape);
-    void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);
+    void PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeOfSelection, size_t count, tm* Date);
+    size_t GetSize();
 };
 
 

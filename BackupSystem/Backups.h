@@ -15,7 +15,7 @@ public:
     Backups(vector<Backup> backups) : backups(backups){};
     void AddBackup(Backup NewBackup);
     void DeleteBackup(int id);
-
+    void TrimmingByShape(size_t LimitSize);
 };
 
 

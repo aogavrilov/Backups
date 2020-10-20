@@ -9,16 +9,10 @@
 #include <string>
 #include <time.h>
 #include <iostream>
+#include "Enums"
 using namespace std;
 
-enum PointSavingType{
-    ToLibrary,
-    ToDirectory
-};
-enum TypesOfPoints{
-    FullPoint,
-    IncrementPoint
-};
+
 class RestorePoint {
     vector<string> objects_list;
     TypesOfPoints type;
@@ -37,7 +31,7 @@ public:
     void SetVersion(int version);
     TypesOfPoints GetType();
     PointSavingType GetSavingType();
-    tm GetDate();
+    tm  GetDate();
 };
 
 

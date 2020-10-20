@@ -1,0 +1,13 @@
+enum PointSavingType{
+    ToLibrary,
+    ToDirectory
+};
+
+enum TypesOfPoints{
+    FullPoint,
+    IncrementPoint
+};
+enum PointLimits{
+    JustAll,
+    AtLeastOne
+};

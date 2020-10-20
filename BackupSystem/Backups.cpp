@@ -23,3 +23,10 @@ void Backups::DeleteBackup(int id){
         }
     }
 }
+void Backups::TrimmingByShape(size_t LimitSize) {
+        for(auto iter = backups.begin(); iter < backups.end(); iter++){
+            if(iter->GetSize() > LimitSize){
+                DeleteBackup(iter->GetID());
+            }
+        }
+}
