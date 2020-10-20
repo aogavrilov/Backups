@@ -10,10 +10,7 @@ using namespace std;
 
 void RestorePoint::SavePointToBackup(string path, string name) {
     ofstream file;
-    file.open(path+name+to_string(version));
-    /*    vector<string> objects_list;
-    TypesOfPoints type;
-    size_t version;*/
+    file.open(path+name+"."+to_string(version));
     file << "Type=" << type << endl;
     for(auto iter = objects_list.begin(); iter != objects_list.end(); iter++){
         file << *iter << endl;
@@ -31,7 +28,7 @@ void RestorePoint::SavePointToLibrary(string name) {
     mkdir(LibraryPath.c_str());
 
     ofstream file;
-    file.open(LibraryPath + "\\" + name + to_string(version));
+    file.open(LibraryPath + "\\" + name + "." + to_string(version));
     file << "Type=" << type << endl;
     for(auto iter = objects_list.begin(); iter != objects_list.end(); iter++){
         file << *iter << endl;

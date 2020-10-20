@@ -11,7 +11,7 @@ int main() {
     Backup first = Backup({"Backups.cbo", "Backups.exe"}, 0);
     vector<string> temp = first.RemoveObject("Backups.exe");
     first.CreatePoint(FullPoint, ToLibrary);
-    first.CreatePoint(FullPoint, ToDirectory);
+    first.CreatePoint(IncrementPoint, ToDirectory);
     first.CreatePoint(FullPoint, ToDirectory);
 
     Backup second = Backup({"Backups.cbo", "Backups.exe"}, 1);

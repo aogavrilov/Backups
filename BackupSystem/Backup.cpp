@@ -3,16 +3,6 @@
 #include <fstream>
 #include <algorithm>
 #include <iostream>
-//
-// Created by Alexey on 19.10.2020.
-//
-/*
- *     vector<string> const* GetObjects();
-    vector<string> const* AddObject(string address);
-    vector<string> const*  RemoveObject(string address);
- *
- *
- */
 #include "Backup.h"
 vector<string> Backup::GetObjects() {
     return objects_address;
@@ -40,17 +30,17 @@ vector<string> Backup::RemoveObject(string address) {
     return objects_address;
 }
 RestorePoint& Backup::CreatePoint(TypesOfPoints type, PointSavingType typesave){
+    LastVersion++;
     RestorePoint NewPoint = RestorePoint(objects_address, type, LastVersion);
     points.push_back(NewPoint);
     BackupSize++;
     if(typesave == ToLibrary) {
-        NewPoint.SavePointToLibrary(to_string(LastVersion));
+        NewPoint.SavePointToLibrary(to_string(Id));
     }
     else {
-        NewPoint.SavePointToBackup(AddressOfBackupPoints, to_string(LastVersion));
-
+        NewPoint.SavePointToBackup(AddressOfBackupPoints, to_string(Id));
     }
-    LastVersion++;
+
     return NewPoint;
 }
 
