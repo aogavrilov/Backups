@@ -142,7 +142,6 @@ void Backup::PointsTrimmingByDate(tm *Date) {
 
 
 /*
-    void PointsTrimmingByDate(tm* Date);
     void PointsTrimmingByShape(size_t shape);
     void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);
 
