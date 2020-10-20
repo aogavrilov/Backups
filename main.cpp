@@ -27,7 +27,6 @@ int main() {
     time_t  now = time(0);
     tm* lt = localtime(&now);
    // lt->tm_mday +=1;
- //   first.PointsTrimmingByDate(lt);
     first.PointsTrimmingMixed({0, 1}, JustAll, 2, lt);
     Backups console = Backups({first, second});
     //console.TrimmingByShape(50000);

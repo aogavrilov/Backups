@@ -12,7 +12,6 @@
 
 using namespace std;
 class Backup{
-//To config: Global link for saving restore points!!!
     int Id;
     time_t CreationTime;
     size_t BackupSize;

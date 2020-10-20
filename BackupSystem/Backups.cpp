@@ -13,7 +13,6 @@ void Backups::DeleteBackup(int id){
 
         if(iter->GetID() == id){
             iter->PointsTrimmingByCount(0);
-            //BackupFile.open();
             remove(("Backup" + to_string(id) + "\\BackUp.info").c_str());
             cout << "Backup" + to_string(id);
             int result = rmdir(("Backup" + to_string(id)).c_str());

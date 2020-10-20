@@ -200,7 +200,3 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
         PointsTrimmingByDate(Date);
     }
 }
-/*
-    void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);
-
- */

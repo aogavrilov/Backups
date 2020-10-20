@@ -5,7 +5,6 @@
 #ifndef BACKUPS_BACKUPS_H
 #define BACKUPS_BACKUPS_H
 
-//#include "../main.cpp"
 #include "../BackupSystem/Backup.h"
 
 using namespace std;
