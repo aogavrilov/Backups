@@ -8,6 +8,8 @@
 #include "../PointSystem/RestorePoint.h"
 #include <string>
 #include <dir.h>
+#include <ctime>
+
 using namespace std;
 enum PointSavingType{
     ToLibrary,
@@ -24,15 +26,18 @@ class Backup{
     vector<string> objects_address;
 public:
     Backup(vector<string> objects, size_t ID=1);
-    ~Backup(){
-        //rmdir(("Backup" + to_string(this->Id)).c_str());
-    }
+    ~Backup(){}
     vector<string> GetObjects(); // Хотел сделать указатель на вектор, но чтобы он мог быть использован только для чтения. Вопрос - как?
     vector<string> AddObject(string address);
     vector<string>  RemoveObject(string address);
-    RestorePoint& CreatePoint(TypesOfPoints type, PointSavingType typesave);
-    RestorePoint& SavePoint(PointSavingType type);
+    RestorePoint& CreatePoint(TypesOfPoints type, PointSavingType typesave, size_t PointSize);
+    void UpdateBackupInfo();
+
+    void PointsTrimmingByCount(size_t count);
+    void PointsTrimmingByDate(tm* Date);
+    void PointsTrimmingByShape(size_t shape);
+    void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);
 };
 
 
-#endif //BACKUPS_BACKUP_H
+#endif

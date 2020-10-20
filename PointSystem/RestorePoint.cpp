@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <dir.h>
+#include <ctime>
 using namespace std;
 
 void RestorePoint::SavePointToBackup(string path, string name) {
