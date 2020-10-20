@@ -31,7 +31,7 @@ vector<string> Backup::RemoveObject(string address) {
 }
 RestorePoint& Backup::CreatePoint(TypesOfPoints type, PointSavingType typesave, size_t PointSize){
     LastVersion++;
-    RestorePoint NewPoint = RestorePoint(objects_address, type, LastVersion);
+    RestorePoint NewPoint = RestorePoint(objects_address, type, LastVersion, typesave);
     points.push_back(NewPoint);
     BackupSize+=PointSize;
     if(typesave == ToLibrary) {
@@ -73,3 +73,50 @@ Backup::Backup(vector<string> objects, size_t ID) : objects_address(objects), Id
     BackupFile << "CreationTime=" << ltm->tm_mday << "." << 1 + ltm->tm_mon << "." << 1900 + ltm->tm_year << endl;
     BackupFile << "BackupSize=" << BackupSize << endl;
 }
+
+size_t Backup::PointsTrimmingByCount(size_t count){
+    if(points.size() <= count)
+        return 0;
+    if(count == 0)
+        return 0;
+    size_t delta = points.size() - count;
+    size_t delta_0 = delta;
+    size_t removed = 0;
+    if(points[delta].GetType() == IncrementPoint){
+        for(int i = delta; i > 0; i--){
+            if(points[i].GetType() == FullPoint) {
+                delta = i;
+                break;
+            }
+        }
+    }
+
+
+    for(size_t i = 0; i < delta; i++){
+        if(points[i - removed].GetSavingType() == ToDirectory)
+            remove((AddressOfBackupPoints + to_string(Id) + "." + to_string(points[i - removed].GetVersion())).c_str());
+        else {
+            ifstream InputFile("config.cfg");
+            string LibraryPath;
+            InputFile >> LibraryPath;
+
+            if(LibraryPath.size() < 17)
+                throw("Undefined exception!");// В класс запилить!
+            LibraryPath = LibraryPath.substr(18);
+            remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(points[i - removed].GetVersion())).c_str());
+        }
+        points.erase(points.begin() + i - removed);
+        removed++;
+    }
+    return delta_0 - delta;
+}
+
+
+
+/*
+    void PointsTrimmingByCount(size_t count);
+    void PointsTrimmingByDate(tm* Date);
+    void PointsTrimmingByShape(size_t shape);
+    void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);
+
+ */

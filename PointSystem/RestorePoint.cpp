@@ -35,3 +35,12 @@ void RestorePoint::SavePointToLibrary(string name) {
         file << *iter << endl;
     }
 }
+int RestorePoint::GetVersion(){
+    return version;
+}
+TypesOfPoints RestorePoint::GetType(){
+    return type;
+}
+PointSavingType RestorePoint::GetSavingType() {
+    return typesave;
+}

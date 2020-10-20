@@ -9,6 +9,10 @@
 #include <string>
 using namespace std;
 
+enum PointSavingType{
+    ToLibrary,
+    ToDirectory
+};
 enum TypesOfPoints{
     FullPoint,
     IncrementPoint
@@ -16,13 +20,16 @@ enum TypesOfPoints{
 class RestorePoint {
     vector<string> objects_list;
     TypesOfPoints type;
-    size_t version;
+    PointSavingType typesave;
+    int version;
 public:
-    RestorePoint(vector<string> objects, TypesOfPoints type, size_t version) : objects_list(objects), type(type),
-    version(version){
-    };
+    RestorePoint(vector<string> objects, TypesOfPoints type, size_t version, PointSavingType typesave) : objects_list(objects), type(type),
+    version(version), typesave(typesave){};
     void SavePointToLibrary(string name);
     void SavePointToBackup(string path, string name);
+    int GetVersion();
+    TypesOfPoints GetType();
+    PointSavingType GetSavingType();
 };
 
 

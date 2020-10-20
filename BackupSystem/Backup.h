@@ -11,10 +11,6 @@
 #include <ctime>
 
 using namespace std;
-enum PointSavingType{
-    ToLibrary,
-    ToDirectory
-};
 class Backup{
 //To config: Global link for saving restore points!!!
     int Id;
@@ -33,7 +29,7 @@ public:
     RestorePoint& CreatePoint(TypesOfPoints type, PointSavingType typesave, size_t PointSize);
     void UpdateBackupInfo();
 
-    void PointsTrimmingByCount(size_t count);
+    size_t PointsTrimmingByCount(size_t count);
     void PointsTrimmingByDate(tm* Date);
     void PointsTrimmingByShape(size_t shape);
     void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);
