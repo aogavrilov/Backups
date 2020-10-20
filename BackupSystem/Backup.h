@@ -28,7 +28,7 @@ public:
     vector<string>  RemoveObject(string address);
     RestorePoint& CreatePoint(TypesOfPoints type, PointSavingType typesave, size_t PointSize);
     void UpdateBackupInfo();
-
+    int GetID();
     size_t PointsTrimmingByCount(size_t count);
     void PointsTrimmingByDate(tm* Date);
     void PointsTrimmingByShape(size_t shape);

@@ -77,8 +77,6 @@ Backup::Backup(vector<string> objects, size_t ID) : objects_address(objects), Id
 size_t Backup::PointsTrimmingByCount(size_t count){
     if(points.size() <= count)
         return 0;
-    if(count == 0)
-        return 0;
     size_t delta = points.size() - count;
     size_t delta_0 = delta;
     size_t removed = 0;
@@ -140,7 +138,9 @@ void Backup::PointsTrimmingByDate(tm *Date) {
     return;
 }
 
-
+int Backup::GetID(){
+    return Id;
+}
 /*
     void PointsTrimmingByShape(size_t shape);
     void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);

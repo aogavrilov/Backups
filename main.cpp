@@ -1,7 +1,8 @@
 #include <iostream>
 
 #include "PointSystem/RestorePoint.h"
-#include "BackupSystem/Backup.h"
+
+#include "BackupSystem/Backups.h"
 using namespace std;
 
 
@@ -24,10 +25,8 @@ int main() {
     second.CreatePoint(FullPoint, ToDirectory, 654);
     second.CreatePoint(FullPoint, ToLibrary,7654);
 
+    Backups console = Backups({first, second});
+    console.DeleteBackup(0);
 
-
-    time_t  now = time(0);
-    tm* lt = localtime(&now);
-    first.PointsTrimmingByDate(lt);
     return 0;
 }
