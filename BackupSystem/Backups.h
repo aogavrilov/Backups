@@ -5,7 +5,7 @@
 #ifndef BACKUPS_BACKUPS_H
 #define BACKUPS_BACKUPS_H
 
-#include "../BackupSystem/Backup.h"
+#include "/Backup.h"
 
 using namespace std;
 class Backups {
