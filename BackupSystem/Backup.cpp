@@ -119,27 +119,28 @@ size_t Backup::PointsTrimmingByCount(size_t count){
 }
 
 void Backup::PointsTrimmingByDate(tm *Date) {
-    for(auto iter = points.begin(); iter < points.end(); iter++){
-        if(IsFirstDateNewiest(*Date, iter->GetDate()))
+    auto it = points.begin();
+    while (it < points.end()) {
+        if(IsFirstDateNewiest(*Date, it->GetDate())) {
+            it++;
             continue;
-        if(iter->GetSavingType() == ToDirectory)
-            remove((AddressOfBackupPoints + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
-        else {
+        }
+        if(it->GetSavingType() == ToDirectory) {
+            remove((AddressOfBackupPoints + to_string(Id) + "." + to_string(it->GetVersion())).c_str());
+            it = points.erase(it);
+        }
+        else{
             ifstream InputFile("config.cfg");
             string LibraryPath;
             InputFile >> LibraryPath;
             if(LibraryPath.size() < 17)
                 throw("Undefined exception!");// В класс запилить!
             LibraryPath = LibraryPath.substr(18);
-            remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
-            iter->SetVersion(-1);
+            remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(it->GetVersion())).c_str());
+            it = points.erase(it);
         }
     }
-    for(auto iter = points.begin(); iter < points.end(); iter++){
-        if(iter->GetVersion() == -1){
-            points.erase(iter);
-        }
-    }
+
 
     return;
 }
@@ -160,7 +161,6 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
             return;
         size_t delta = points.size() - count;
         size_t delta_0 = delta;
-        size_t removed = 0;
         if(points[delta].GetType() == IncrementPoint){
             for(int i = delta; i > 0; i--){
                 if(points[i].GetType() == FullPoint) {
@@ -169,12 +169,16 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
                 }
             }
         }
-        for(size_t i = 0; i < delta; i++){
-            if ((IsFirstDateNewiest(*Date, points[i - removed].GetDate())) && (TypesOfTrimming[1] == 1))
+        auto iter = points.begin();
+        int removed=0;
+        while(iter < points.begin() + delta - removed){
+            if ((IsFirstDateNewiest(*Date, iter->GetDate())) && (TypesOfTrimming[1] == 1)){
+                iter++;
                 continue;
-            if(points[i - removed].GetSavingType() == ToDirectory) {
+            }
+            if(iter->GetSavingType() == ToDirectory) {
                 remove((AddressOfBackupPoints + to_string(Id) + "." +
-                        to_string(points[i - removed].GetVersion())).c_str());
+                        to_string(iter->GetVersion())).c_str());
             }
             else {
                 ifstream InputFile("config.cfg");
@@ -184,9 +188,9 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
                 if(LibraryPath.size() < 17)
                     throw("Undefined exception!");// В класс запилить!
                 LibraryPath = LibraryPath.substr(18);
-                remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(points[i - removed].GetVersion())).c_str());
+                remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
             }
-            points.erase(points.begin() + i - removed);
+            iter = points.erase(iter);
             removed++;
         }
         return;
@@ -199,4 +203,8 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
         PointsTrimmingByCount(count);
         PointsTrimmingByDate(Date);
     }
+}
+
+vector<RestorePoint> Backup::GetPoints() {
+    return points;
 }

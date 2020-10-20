@@ -14,7 +14,6 @@ void Backups::DeleteBackup(int id){
         if(iter->GetID() == id){
             iter->PointsTrimmingByCount(0);
             remove(("Backup" + to_string(id) + "\\BackUp.info").c_str());
-            cout << "Backup" + to_string(id);
             int result = rmdir(("Backup" + to_string(id)).c_str());
             if(result)
                 throw "Backup directory isn't empty!";//в класс ошибки
@@ -28,4 +27,7 @@ void Backups::TrimmingByShape(size_t LimitSize) {
                 DeleteBackup(iter->GetID());
             }
         }
+}
+vector<Backup> Backups::GetBackups() {
+    return backups;
 }

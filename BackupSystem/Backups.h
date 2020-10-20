@@ -5,7 +5,7 @@
 #ifndef BACKUPS_BACKUPS_H
 #define BACKUPS_BACKUPS_H
 
-#include "/Backup.h"
+#include "Backup.h"
 
 using namespace std;
 class Backups {
@@ -15,6 +15,7 @@ public:
     void AddBackup(Backup NewBackup);
     void DeleteBackup(int id);
     void TrimmingByShape(size_t LimitSize);
+    vector<Backup> GetBackups();
 };
 
 

@@ -17,7 +17,7 @@ class Backup{
     size_t BackupSize;
     string AddressOfBackupPoints;
     int LastVersion;
-    vector<RestorePoint> points;
+    vector<RestorePoint> points = vector<RestorePoint>();
     vector<string> objects_address;
 public:
     Backup(vector<string> objects, size_t ID=1);
@@ -32,6 +32,7 @@ public:
     void PointsTrimmingByDate(tm* Date);
     void PointsTrimmingByShape(size_t shape);
     void PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeOfSelection, size_t count, tm* Date);
+    vector<RestorePoint> GetPoints();
     size_t GetSize();
 };
 
