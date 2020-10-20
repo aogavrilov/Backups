@@ -90,8 +90,6 @@ size_t Backup::PointsTrimmingByCount(size_t count){
             }
         }
     }
-
-
     for(size_t i = 0; i < delta; i++){
         if(points[i - removed].GetSavingType() == ToDirectory)
             remove((AddressOfBackupPoints + to_string(Id) + "." + to_string(points[i - removed].GetVersion())).c_str());
@@ -111,10 +109,39 @@ size_t Backup::PointsTrimmingByCount(size_t count){
     return delta_0 - delta;
 }
 
+void Backup::PointsTrimmingByDate(tm *Date) {
+    for(auto iter = points.begin(); iter < points.end(); iter++){
+        if(Date->tm_year > iter->GetDate().tm_year)
+            continue;
+        if((Date->tm_year == iter->GetDate().tm_year) && (Date->tm_mon > iter->GetDate().tm_mon))
+            continue;
+        if((Date->tm_year == iter->GetDate().tm_year) && (Date->tm_mon == iter->GetDate().tm_mon) &&
+            (Date->tm_mday > iter->GetDate().tm_mday))
+            continue;
+        if(iter->GetSavingType() == ToDirectory)
+            remove((AddressOfBackupPoints + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
+        else {
+            ifstream InputFile("config.cfg");
+            string LibraryPath;
+            InputFile >> LibraryPath;
+            if(LibraryPath.size() < 17)
+                throw("Undefined exception!");// В класс запилить!
+            LibraryPath = LibraryPath.substr(18);
+            remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
+            iter->SetVersion(-1);
+        }
+    }
+    for(auto iter = points.begin(); iter < points.end(); iter++){
+        if(iter->GetVersion() == -1){
+            points.erase(iter);
+        }
+    }
+
+    return;
+}
 
 
 /*
-    void PointsTrimmingByCount(size_t count);
     void PointsTrimmingByDate(tm* Date);
     void PointsTrimmingByShape(size_t shape);
     void PointsTrimmingMixed(vector<bool> TypesOfTrimming, bool TypeOfSelection);

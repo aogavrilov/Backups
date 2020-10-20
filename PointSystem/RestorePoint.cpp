@@ -34,6 +34,7 @@ void RestorePoint::SavePointToLibrary(string name) {
     for(auto iter = objects_list.begin(); iter != objects_list.end(); iter++){
         file << *iter << endl;
     }
+
 }
 int RestorePoint::GetVersion(){
     return version;
@@ -43,4 +44,10 @@ TypesOfPoints RestorePoint::GetType(){
 }
 PointSavingType RestorePoint::GetSavingType() {
     return typesave;
+}
+void RestorePoint::SetVersion(int version) {
+    version = version;
+}
+tm RestorePoint::GetDate(){
+    return ltm;
 }

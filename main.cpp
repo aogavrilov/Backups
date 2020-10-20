@@ -24,6 +24,10 @@ int main() {
     second.CreatePoint(FullPoint, ToDirectory, 654);
     second.CreatePoint(FullPoint, ToLibrary,7654);
 
-    first.PointsTrimmingByCount(2);
+
+
+    time_t  now = time(0);
+    tm* lt = localtime(&now);
+    first.PointsTrimmingByDate(lt);
     return 0;
 }
