@@ -3,7 +3,7 @@
 //
 
 #include "Backups.h"
-
+#include "../Exception.h"
 void Backups::AddBackup(Backup NewBackup){
     backups.push_back(NewBackup);
 }
@@ -16,7 +16,7 @@ void Backups::DeleteBackup(int id){
             remove(("Backup" + to_string(id) + "\\BackUp.info").c_str());
             int result = rmdir(("Backup" + to_string(id)).c_str());
             if(result)
-                throw "Backup directory isn't empty!";//в класс ошибки
+                throw MyException("Backup directory isn't empty!");//в класс ошибки
             backups.erase(iter);
         }
     }

@@ -3,6 +3,7 @@
 //
 
 #include "RestorePoint.h"
+#include "../Exception.h"
 #include <fstream>
 #include <iostream>
 #include <dir.h>
@@ -17,14 +18,16 @@ void RestorePoint::SavePointToBackup(string path, string name) {
         file << *iter << endl;
     }
 }
-
+int RestorePoint::GetSize() {
+    return this->size;
+}
 void RestorePoint::SavePointToLibrary(string name) {
     ifstream InputFile("config.cfg");
     string LibraryPath;
     InputFile >> LibraryPath;
 
     if(LibraryPath.size() < 17)
-        throw("Some exception for invalid config");// В класс запилить!
+        throw MyException("Some exception for invalid config");// В класс запилить!
     LibraryPath = LibraryPath.substr(18);
     mkdir(LibraryPath.c_str());
 

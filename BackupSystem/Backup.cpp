@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 #include "Backup.h"
+#include "../Exception.h"
+
 vector<string> Backup::GetObjects() {
     return objects_address;
 }
@@ -31,7 +33,7 @@ vector<string> Backup::RemoveObject(string address) {
 }
 RestorePoint& Backup::CreatePoint(TypesOfPoints type, PointSavingType typesave, size_t PointSize){
     LastVersion++;
-    RestorePoint NewPoint = RestorePoint(objects_address, type, LastVersion, typesave);
+    RestorePoint NewPoint = RestorePoint(objects_address, type, LastVersion, typesave, PointSize);
     points.push_back(NewPoint);
     BackupSize+=PointSize;
     UpdateBackupInfo();
@@ -107,7 +109,7 @@ size_t Backup::PointsTrimmingByCount(size_t count){
             InputFile >> LibraryPath;
 
             if(LibraryPath.size() < 17)
-                throw("Undefined exception!");// В класс запилить!
+                throw MyException("Undefined exception!");// В класс запилить!
             LibraryPath = LibraryPath.substr(18);
             remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(points[i - removed].GetVersion())).c_str());
         }
@@ -134,7 +136,7 @@ void Backup::PointsTrimmingByDate(tm *Date) {
             string LibraryPath;
             InputFile >> LibraryPath;
             if(LibraryPath.size() < 17)
-                throw("Undefined exception!");// В класс запилить!
+                throw MyException("Undefined exception!");// В класс запилить!
             LibraryPath = LibraryPath.substr(18);
             remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(it->GetVersion())).c_str());
             it = points.erase(it);
@@ -150,12 +152,36 @@ size_t Backup::GetSize(){
 int Backup::GetID(){
     return Id;
 }
+void Backup::PointsTrimmingByShape(size_t shape) {
+    int sum = 0;
+    auto iter = points.begin();
+    while (iter < points.end()) {
+        if(iter->GetSize() + sum > shape){
+            if(iter->GetSavingType() == ToDirectory)
+                remove((AddressOfBackupPoints + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
+            else {
+                ifstream InputFile("config.cfg");
+                string LibraryPath;
+                InputFile >> LibraryPath;
+                if(LibraryPath.size() < 17)
+                    throw MyException("Undefined exception!");// В класс запилить!
+                LibraryPath = LibraryPath.substr(18);
+                remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
+            }
+            iter = points.erase(iter);
 
-void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeOfSelection, size_t count, tm* Date) {
-    if(TypesOfTrimming.size() != 2)
-        throw "Expected 2 params, found not 2";
+        }
+        else{
+            sum += iter->GetSize();
+            iter++;
+        }
+    }
 
-    if((TypeOfSelection == JustAll) && (TypesOfTrimming[0] == 1)){
+
+}
+void Backup::PointsTrimmingMixed(PointLimits TypeOfSelection, size_t count, size_t size, tm* Date) {
+    int sum = 0;
+    if(TypeOfSelection == JustAll){
 
         if(points.size() <= count)
             return;
@@ -172,7 +198,13 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
         auto iter = points.begin();
         int removed=0;
         while(iter < points.begin() + delta - removed){
-            if ((IsFirstDateNewiest(*Date, iter->GetDate())) && (TypesOfTrimming[1] == 1)){
+            if (IsFirstDateNewiest(*Date, iter->GetDate())){
+                sum += iter->GetSize();
+                iter++;
+                continue;
+            }
+            if(sum + iter->GetSize() < size){
+                size += iter->GetSize();
                 iter++;
                 continue;
             }
@@ -186,7 +218,7 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
                 InputFile >> LibraryPath;
 
                 if(LibraryPath.size() < 17)
-                    throw("Undefined exception!");// В класс запилить!
+                    throw MyException("Undefined exception!");// В класс запилить!
                 LibraryPath = LibraryPath.substr(18);
                 remove((LibraryPath + "\\" + to_string(Id) + "." + to_string(iter->GetVersion())).c_str());
             }
@@ -196,12 +228,10 @@ void Backup::PointsTrimmingMixed(vector<bool> TypesOfTrimming, PointLimits TypeO
         return;
 
     }
-    else if(TypeOfSelection == JustAll){
-        PointsTrimmingByDate(Date);
-    }
     else{
         PointsTrimmingByCount(count);
         PointsTrimmingByDate(Date);
+        PointsTrimmingByShape(size);
     }
 }
 

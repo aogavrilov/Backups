@@ -19,9 +19,10 @@ class RestorePoint {
     PointSavingType typesave;
     int version;
     tm ltm;
+    size_t size;
 public:
-    RestorePoint(vector<string> objects, TypesOfPoints type, size_t version, PointSavingType typesave) : objects_list(objects), type(type),
-    version(version), typesave(typesave){
+    RestorePoint(vector<string> objects, TypesOfPoints type, size_t version, PointSavingType typesave, size_t size) : objects_list(objects), type(type),
+    version(version), typesave(typesave), size(size){
         time_t  now = time(0);
         ltm = *localtime(&now);
     };
@@ -29,6 +30,7 @@ public:
     void SavePointToBackup(string path, string name);
     int GetVersion();
     void SetVersion(int version);
+    int GetSize();
     TypesOfPoints GetType();
     PointSavingType GetSavingType();
     tm  GetDate();
