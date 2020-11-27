@@ -56,11 +56,10 @@ int main() {
     time_t  now = time(0);
     tm* lt = localtime(&now);
     lt->tm_mday -= 1;
-    PointsTrimmingByCount tr11 = PointsTrimmingByCount(secod, 2);
-    PointsTrimmingByShape tr12 = PointsTrimmingByShape(secod, 5000);
-    PointsTrimmingByDate tr13 = PointsTrimmingByDate(secod, lt);
 
-    secod = TrimmingMixed(secod, {&tr11, &tr12, &tr13}).Trim(AtLeastOne);
+
+    secod = TrimmingMixed(secod, {new PointsTrimmingByCount(secod, 2), new PointsTrimmingByShape(secod, 5000),
+                                  new PointsTrimmingByDate(secod, lt)}).Trim(AtLeastOne);
     assert(secod.GetPoints().size() == 1);
 
     ///:2
@@ -71,10 +70,8 @@ int main() {
     time_t  now1 = time(0);
     tm* lt1 = localtime(&now1);
     lt1->tm_mday -=1;
-    PointsTrimmingByCount tr31 = PointsTrimmingByCount(third, 2);
-    PointsTrimmingByShape tr32 = PointsTrimmingByShape(third, 500);
-    PointsTrimmingByDate tr33 = PointsTrimmingByDate(third, lt1);
-    third = TrimmingMixed(third, {&tr31, &tr32, &tr33}).Trim(JustAll);
+    third = TrimmingMixed(third, {new PointsTrimmingByCount(third, 2), new PointsTrimmingByShape(third, 500),
+                                  new PointsTrimmingByDate(third, lt1)}).Trim(JustAll);
     assert(third.GetPoints().size() == 3);
     ///:3
     Backup fourth = Backup({"Backups.cbo", "Backups.exe"}, 3);
@@ -84,10 +81,8 @@ int main() {
     time_t  now2 = time(0);
     tm* lt2 = localtime(&now2);
     lt2->tm_mday +=3;
-    PointsTrimmingByCount tr41 = PointsTrimmingByCount(fourth, 2);
-    PointsTrimmingByShape tr42 = PointsTrimmingByShape(fourth, 500);
-    PointsTrimmingByDate tr43 = PointsTrimmingByDate(fourth, lt2);
-    fourth = TrimmingMixed(fourth, {&tr41, &tr42, &tr43}).Trim(JustAll);
+    fourth = TrimmingMixed(fourth, {new PointsTrimmingByCount(fourth, 2), new PointsTrimmingByShape(fourth, 500),
+                                    new PointsTrimmingByDate(fourth, lt2)}).Trim(JustAll);
     assert(fourth.GetPoints().size() == 2);
 
     ///:4
@@ -96,10 +91,8 @@ int main() {
     fifth.CreatePoint(FullPoint, ToLibrary, 654);
     fifth.CreatePoint(FullPoint, ToDirectory, 654);
     fifth.CreatePoint(FullPoint, ToLibrary,7654);
-    PointsTrimmingByCount tr51 = PointsTrimmingByCount(fifth, 1);
-    PointsTrimmingByShape tr52 = PointsTrimmingByShape(fifth, 500);
-    PointsTrimmingByDate tr53 = PointsTrimmingByDate(fifth, lt2);
-    fifth = TrimmingMixed(fifth, {&tr51, &tr52, &tr53}).Trim(JustAll);
+    fifth = TrimmingMixed(fifth, {new PointsTrimmingByCount(fifth, 1), new PointsTrimmingByShape(fifth, 500),
+                                  new PointsTrimmingByDate(fifth, lt2)}).Trim(JustAll);
 
     assert(fifth.GetPoints().size() == 3);
 
@@ -109,10 +102,8 @@ int main() {
     sixth.CreatePoint(FullPoint, ToLibrary, 654);
     sixth.CreatePoint(FullPoint, ToDirectory, 654);
     sixth.CreatePoint(FullPoint, ToLibrary,7654);
-    PointsTrimmingByCount tr61 = PointsTrimmingByCount(sixth, 5);
-    PointsTrimmingByShape tr62 = PointsTrimmingByShape(sixth, 500);
-    PointsTrimmingByDate tr63 = PointsTrimmingByDate(sixth, lt);
-    sixth = TrimmingMixed(sixth, {&tr61, &tr62, &tr63}).Trim(JustAll);
+    sixth = TrimmingMixed(sixth, {new PointsTrimmingByCount(sixth, 5), new PointsTrimmingByShape(sixth, 500),
+                                  new PointsTrimmingByDate(sixth, lt)}).Trim(JustAll);
 
     assert(sixth.GetPoints().size() == 3);
 

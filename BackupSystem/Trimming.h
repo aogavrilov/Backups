@@ -49,7 +49,9 @@ class TrimmingMixed {
     Backup backup;
     vector<Trimming*> politics;
 public:
-    TrimmingMixed(Backup backup, vector<Trimming*> politics) : backup(backup), politics(politics){}
+    TrimmingMixed(Backup backup, vector<Trimming*> politics) : backup(backup), politics(politics){
+
+    }
     Backup Trim(PointLimits limit);
 
 
